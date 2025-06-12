@@ -1,9 +1,21 @@
-# User Story
-
-## 	1. Als Benutzer kann ich schnell neue Todos erstellen, damit ich mir nicht alles merken muss.  
-### Akzeptanzkriterien: Neue Todos werden einfach und schnell erstellt. Wenn ich mich erneut mit dem Server verbinde, sind die Todos weiterhin sichtbar. 
-
-<br></br>
-
-##  2. Als Benutzer kann ich schnell erledigte Todos löschen, damit die Liste übersichtlich bleibt.  
-### Akzeptanzkriterien: Todos werden einfach und schnell abgehakt und sind dann nicht mehr sichtbar. 
+    ---
+    name: 🧩 User Story
+    about: Erstelle eine neue User Story
+    title: "[User Story] "
+    labels: user-story
+    assignees: ''
+    ---
+    ### 🧑‍🤝‍🧑 Rolle
+    *Als* ... *(z. B. Benutzer, Admin, Entwickler)*
+    ### 🎯 Ziel / Wunsch
+    *möchte ich* ...
+    ### 💡 Nutzen
+    *damit* ...
+    ---
+    ### ✅ Teilaufgaben
+    - [ ] Task 1
+    - [ ] Task 2
+    - [ ] Task 3
+    ---
+    ### 📎 Weitere Hinweise
+    (Optional: Screenshots, Links, technische Hinweise …)
