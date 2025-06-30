@@ -1,22 +1,26 @@
 package com.example.demo;
 
-/** the simplest task 
- * 
- * @author luh
- */
 public class Task {
 	
-	private String taskdescription; // must have the EXACT name as his React state property and may not be ignored!
+	private String taskdescription;
 
 	public Task() {
     }
 
-	public String getTaskdescription() { // do not apply camel-case here! Its a Bean!
+	public Task(String taskdescription) {
+		setTaskdescription(taskdescription);
+	}
+
+	public String getTaskdescription() {
 		return taskdescription;
 	}
 
-	public void setTaskdescription(String taskdescription) { // do not apply camel-case here! Its a Bean!
-		this.taskdescription = taskdescription;
+	public void setTaskdescription(String taskdescription) {
+		if (taskdescription != null && taskdescription.length() > 200) {
+			this.taskdescription = taskdescription.substring(0, 200);
+		} else {
+			this.taskdescription = taskdescription;
+		}
 	}
 
 }
