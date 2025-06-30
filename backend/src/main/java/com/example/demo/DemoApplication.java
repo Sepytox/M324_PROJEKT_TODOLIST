@@ -22,6 +22,7 @@ public class DemoApplication {
 
 	private static final Logger logger = Logger.getLogger(DemoApplication.class.getName());
 	private final ObjectMapper mapper = new ObjectMapper();
+	private static final String ERROR_RESPONSE = "error";
 	
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
@@ -54,7 +55,7 @@ public class DemoApplication {
 		
 		if (taskdescription == null || taskdescription.trim().isEmpty()) {
 			logger.warning("Empty task description received");
-			return "error";
+			return ERROR_RESPONSE;
 		}
 		
 		try {
@@ -62,7 +63,7 @@ public class DemoApplication {
 			
 			if (task.getTaskdescription() == null || task.getTaskdescription().trim().isEmpty()) {
 				logger.warning("Task with empty description");
-				return "error";
+				return ERROR_RESPONSE;
 			}
 			
 			for (Task t : tasks) {
@@ -75,7 +76,7 @@ public class DemoApplication {
 			tasks.add(task);
 		} catch (JsonProcessingException e) {
 			logger.warning("Failed to parse JSON: " + e.getMessage());
-			return "error";
+			return ERROR_RESPONSE;
 		}
 		return "success";
 	}
@@ -87,7 +88,7 @@ public class DemoApplication {
 		
 		if (taskdescription == null || taskdescription.trim().isEmpty()) {
 			logger.warning("Empty task description for delete");
-			return "error";
+			return ERROR_RESPONSE;
 		}
 		
 		try {
@@ -95,7 +96,7 @@ public class DemoApplication {
 			
 			if (task.getTaskdescription() == null || task.getTaskdescription().trim().isEmpty()) {
 				logger.warning("Task with empty description for delete");
-				return "error";
+				return ERROR_RESPONSE;
 			}
 			
 			Iterator<Task> it = tasks.iterator();
@@ -110,7 +111,7 @@ public class DemoApplication {
 			System.out.println(">>>task: '" + task.getTaskdescription() + "' not found!");
 		} catch (JsonProcessingException e) {
 			logger.warning("Failed to parse JSON for delete: " + e.getMessage());
-			return "error";
+			return ERROR_RESPONSE;
 		}
 		return "not_found";
 	}
