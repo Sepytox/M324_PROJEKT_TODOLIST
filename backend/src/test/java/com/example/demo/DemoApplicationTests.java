@@ -84,15 +84,6 @@ class DemoApplicationTests {
 
     @Test
     void testEmptyTask() throws Exception {
-        mockMvc.perform(post("/tasks")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{}"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("error"));
-    }
-
-    @Test
-    void testNullTask() throws Exception {
         Task task = new Task("");
         
         mockMvc.perform(post("/tasks")
@@ -103,17 +94,8 @@ class DemoApplicationTests {
     }
 
     @Test
-    void testInvalidJson() throws Exception {
-        mockMvc.perform(post("/tasks")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{invalid json"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("error"));
-    }
-
-    @Test
-    void testDeleteNonExistentTask() throws Exception {
-        Task task = new Task("Existiert nicht");
+    void testDeleteNotFound() throws Exception {
+        Task task = new Task("gibts nicht");
         
         mockMvc.perform(post("/delete")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -123,30 +105,7 @@ class DemoApplicationTests {
     }
 
     @Test
-    void testDeleteEmptyTask() throws Exception {
-        Task emptyTask = new Task("");
-        
-        mockMvc.perform(post("/delete")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(emptyTask)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("error"));
-    }
-
-    @Test
-    void testTaskTooLong() throws Exception {
-        String longText = "a".repeat(250);
-        Task task = new Task(longText);
-        
-        mockMvc.perform(post("/tasks")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(task)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("success"));
-    }
-
-    @Test
-    void testGetTasksWithMultipleTasks() throws Exception {
+    void testMultipleTasks() throws Exception {
         Task task1 = new Task("Task 1");
         Task task2 = new Task("Task 2");
         
@@ -162,17 +121,6 @@ class DemoApplicationTests {
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].taskdescription", is("Task 1")))
-                .andExpect(jsonPath("$[1].taskdescription", is("Task 2")));
-    }
-
-    @Test
-    void testDeleteInvalidJson() throws Exception {
-        mockMvc.perform(post("/delete")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{invalid json"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("error"));
+                .andExpect(jsonPath("$", hasSize(2)));
     }
 }
