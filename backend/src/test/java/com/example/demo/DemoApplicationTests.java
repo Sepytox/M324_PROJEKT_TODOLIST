@@ -126,7 +126,6 @@ class DemoApplicationTests {
 
     @Test
     void testEditTask() throws Exception {
-        // Task hinzufügen
         Task task = new Task("Original Task");
         
         mockMvc.perform(post("/tasks")
@@ -134,13 +133,11 @@ class DemoApplicationTests {
                 .content(objectMapper.writeValueAsString(task)))
                 .andExpect(status().isOk());
 
-        // Task-Liste abrufen um ID zu bekommen
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].taskdescription", is("Original Task")));
 
-        // Edit Request erstellen
         EditRequest editRequest = new EditRequest(1, "Bearbeitete Task");
         
         mockMvc.perform(post("/edit")
@@ -149,7 +146,6 @@ class DemoApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string("success"));
 
-        // Prüfen ob Task bearbeitet wurde
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -177,6 +173,89 @@ class DemoApplicationTests {
                 .andExpect(status().isOk());
 
         EditRequest editRequest = new EditRequest(1, "");
+        
+        mockMvc.perform(post("/edit")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(editRequest)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("error"));
+    }
+
+    @Test
+    void testAddTaskWithNullDescription() throws Exception {
+        mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("null"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("error"));
+    }
+
+    @Test
+    void testAddTaskWithInvalidJson() throws Exception {
+        mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{invalid json"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("error"));
+    }
+
+    @Test
+    void testDeleteTaskWithNullDescription() throws Exception {
+        mockMvc.perform(post("/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("null"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("error"));
+    }
+
+    @Test
+    void testDeleteTaskWithInvalidJson() throws Exception {
+        mockMvc.perform(post("/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{invalid json"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("error"));
+    }
+
+    @Test
+    void testEditTaskWithNullBody() throws Exception {
+        mockMvc.perform(post("/edit")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("null"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("error"));
+    }
+
+    @Test
+    void testEditTaskWithInvalidJson() throws Exception {
+        mockMvc.perform(post("/edit")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{invalid json"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("error"));
+    }
+
+    @Test
+    void testEditTaskWithInvalidId() throws Exception {
+        EditRequest editRequest = new EditRequest(-1, "Test");
+        
+        mockMvc.perform(post("/edit")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(editRequest)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("error"));
+    }
+
+    @Test
+    void testEditTaskWithNullDescription() throws Exception {
+        Task task = new Task("Test Task");
+        
+        mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(task)))
+                .andExpect(status().isOk());
+
+        EditRequest editRequest = new EditRequest(1, null);
         
         mockMvc.perform(post("/edit")
                 .contentType(MediaType.APPLICATION_JSON)

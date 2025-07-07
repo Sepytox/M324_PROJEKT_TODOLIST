@@ -63,7 +63,7 @@ public class DemoApplication {
 		try {
 			Task task = mapper.readValue(taskdescription, Task.class);
 			
-			if (task.getTaskdescription() == null || task.getTaskdescription().trim().isEmpty()) {
+			if (task == null || task.getTaskdescription() == null || task.getTaskdescription().trim().isEmpty()) {
 				logger.warning("Task with empty description");
 				return ERROR_RESPONSE;
 			}
@@ -96,7 +96,7 @@ public class DemoApplication {
 		try {
 			Task task = mapper.readValue(taskdescription, Task.class);
 			
-			if (task.getTaskdescription() == null || task.getTaskdescription().trim().isEmpty()) {
+			if (task == null || task.getTaskdescription() == null || task.getTaskdescription().trim().isEmpty()) {
 				logger.warning("Task with empty description for delete");
 				return ERROR_RESPONSE;
 			}
@@ -131,7 +131,7 @@ public class DemoApplication {
 		try {
 			EditRequest editRequest = mapper.readValue(requestBody, EditRequest.class);
 			
-			if (editRequest.getId() <= 0 || editRequest.getNewDescription() == null || 
+			if (editRequest == null || editRequest.getId() <= 0 || editRequest.getNewDescription() == null || 
 				editRequest.getNewDescription().trim().isEmpty()) {
 				logger.warning("Invalid edit request");
 				return ERROR_RESPONSE;
