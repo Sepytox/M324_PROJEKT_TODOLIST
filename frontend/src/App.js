@@ -51,7 +51,9 @@ class App extends React.Component {
     super(props);      // ensure that the constructor of the parent class (React.Component) is properly called.
     this.state = {
       todos: typeof props.todos === 'undefined' ? [] : props.todos,
-      taskdescription: ""
+      taskdescription: "",
+      editingId: null,
+      editText: ""
     };
     // **( Remark:
     // If props.todos is of the type undefined, the expression typeof props.todos === 'undefined' will return true,
@@ -91,9 +93,7 @@ class App extends React.Component {
       // add the new Task to list (temporary solution to show it immediately):
       //const newTodos = this.state.todos.slice(); // creates a copy of the current todos state, which returns a shallow copy of the array.
       //newTodos.push({taskdescription: this.state.taskdescription});    // pushes the new task object to the copy of the todos state array using the task.task attribute.
-      this.setState({
-        todos: [...this.state.todos, {taskdescription: this.state.taskdescription}]
-      });          // updates the component state with the new todos array.
+      this.componentDidMount(); // Refresh the list to get IDs from server
       this.setState({taskdescription: ""});             // clear input field, preparing it for the next input
     })
     .catch(error => console.log(error))
@@ -133,6 +133,52 @@ class App extends React.Component {
     .catch(error => console.log(error))
   }
 
+  /** Is called when the Edit-Button is pressed. */
+  handleEditClick = (todo) => {
+    this.setState({
+      editingId: todo.id,
+      editText: todo.taskdescription
+    });
+  }
+
+  /** Is called when editing is cancelled. */
+  handleCancelEdit = () => {
+    this.setState({
+      editingId: null,
+      editText: ""
+    });
+  }
+
+  /** Is called when edit text changes. */
+  handleEditChange = (event) => {
+    this.setState({ editText: event.target.value });
+  }
+
+  /** Is called when edit is saved. */
+  handleSaveEdit = (todoId) => {
+    console.log("Sending edit request to Spring-Server for ID: " + todoId);
+    fetch(`http://localhost:8080/edit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ 
+        id: todoId, 
+        newDescription: this.state.editText 
+      })
+    })
+    .then(response => {
+      console.log("Receiving answer after editing on Spring-Server: ");
+      console.log(response);
+      this.setState({
+        editingId: null,
+        editText: ""
+      });
+      this.componentDidMount(); // Refresh the list
+    })
+    .catch(error => console.log(error))
+  }
+
   /**
    * render all task lines
    * @param {*} todos : Task list
@@ -142,9 +188,28 @@ class App extends React.Component {
     return (
       <ul>
         {todos.map((todo, index) => (
-          <li key={todo.taskdescription}>
-            {"Task " + (index+1) + ": "+ todo.taskdescription}
-            <button onClick={this.handleClick.bind(this, todo.taskdescription)}>Done</button>
+          <li key={todo.id || todo.taskdescription}>
+            {this.state.editingId === todo.id ? (
+              // Edit mode
+              <div>
+                <span>Task {index + 1}: </span>
+                <input 
+                  type="text" 
+                  value={this.state.editText} 
+                  onChange={this.handleEditChange}
+                  style={{marginLeft: '5px', marginRight: '5px'}}
+                />
+                <button onClick={() => this.handleSaveEdit(todo.id)} style={{marginRight: '5px'}}>Save</button>
+                <button onClick={this.handleCancelEdit}>Cancel</button>
+              </div>
+            ) : (
+              // Display mode
+              <div>
+                <span>Task {index + 1}: {todo.taskdescription}</span>
+                <button onClick={() => this.handleEditClick(todo)} style={{marginLeft: '10px', marginRight: '5px'}}>Edit</button>
+                <button onClick={this.handleClick.bind(this, todo.taskdescription)}>Done</button>
+              </div>
+            )}
           </li>
         ))}
       </ul>

@@ -116,4 +116,39 @@ public class DemoApplication {
 		return "not_found";
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PostMapping("/edit")
+	public String editTask(@RequestBody String requestBody) {
+		System.out.println("API EP '/edit': '" + requestBody + "'");
+		
+		if (requestBody == null || requestBody.trim().isEmpty()) {
+			logger.warning("Empty request body for edit");
+			return ERROR_RESPONSE;
+		}
+		
+		try {
+			EditRequest editRequest = mapper.readValue(requestBody, EditRequest.class);
+			
+			if (editRequest.getId() <= 0 || editRequest.getNewDescription() == null || 
+				editRequest.getNewDescription().trim().isEmpty()) {
+				logger.warning("Invalid edit request");
+				return ERROR_RESPONSE;
+			}
+			
+			for (Task task : tasks) {
+				if (task.getId() == editRequest.getId()) {
+					String oldDesc = task.getTaskdescription();
+					task.setTaskdescription(editRequest.getNewDescription());
+					System.out.println("...editing task " + editRequest.getId() + ": '" + oldDesc + "' -> '" + editRequest.getNewDescription() + "'");
+					return "success";
+				}
+			}
+			System.out.println(">>>task with id " + editRequest.getId() + " not found!");
+		} catch (JsonProcessingException e) {
+			logger.warning("Failed to parse JSON for edit: " + e.getMessage());
+			return ERROR_RESPONSE;
+		}
+		return "not_found";
+	}
+
 }
