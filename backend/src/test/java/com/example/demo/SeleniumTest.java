@@ -20,16 +20,16 @@ public class SeleniumTest {
     private WebDriver driver;
 
     @BeforeEach
-    private void setup() {
+    public void setup() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
-        driver.get("http//localhost:3000");
+        driver.get("http://localhost:3000");
         driver.manage().window().maximize();
     }
 
 
     @Test
-    private void editButtonCanEdit() {
+    public void editButtonCanEdit() {
         driver.findElement(By.id("formtochange")).sendKeys("previous input");
         driver.findElement(By.className("Submission")).click();
 
@@ -37,8 +37,23 @@ public class SeleniumTest {
         WebElement ul = wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("ul")));
 
         driver.findElement(By.id("Edit")).click();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         driver.findElement(By.className("EditorialSlave")).clear();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         driver.findElement(By.className("EditorialSlave")).sendKeys("Edit works fine");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         driver.findElement(By.id("Save")).click();
 
         boolean editWorks = ul.findElements(By.tagName("li")).stream()
@@ -48,7 +63,8 @@ public class SeleniumTest {
     }
 
     @AfterEach
-    private void shutDown() {
+    public void shutDown() {
+        driver.findElement(By.id("DoneEdit")).click();
         if(driver != null) {
             driver.quit();
         }
