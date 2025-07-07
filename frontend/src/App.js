@@ -115,20 +115,20 @@ class App extends React.Component {
             {this.state.editingId === todo.id ? (
               <div>
                 <span>Task {index + 1}: </span>
-                <input 
+                <input className='EditorialSlave'
                   type="text" 
                   value={this.state.editText} 
                   onChange={this.handleEditChange}
                   style={{marginLeft: '5px', marginRight: '5px'}}
                 />
-                <button onClick={() => this.handleSaveEdit(todo.id)} style={{marginRight: '5px'}}>Save</button>
-                <button onClick={this.handleCancelEdit}>Cancel</button>
+                <button id="Save" onClick={() => this.handleSaveEdit(todo.id)} style={{marginRight: '5px'}}>Save</button>
+                <button id="CancelEdit" onClick={this.handleCancelEdit}>Cancel</button>
               </div>
             ) : (
               <div>
                 <span>Task {index + 1}: {todo.taskdescription}</span>
-                <button onClick={() => this.handleEditClick(todo)} style={{marginLeft: '10px', marginRight: '5px'}}>Edit</button>
-                <button onClick={this.handleClick.bind(this, todo.taskdescription)}>Done</button>
+                <button id="Edit" onClick={() => this.handleEditClick(todo)} style={{marginLeft: '10px', marginRight: '5px'}}>Edit</button>
+                <button id="DoneEdit" onClick={this.handleClick.bind(this, todo.taskdescription)}>Done</button>
               </div>
             )}
           </li>
@@ -145,13 +145,13 @@ class App extends React.Component {
           <h1>
             ToDo Liste
           </h1>
-          <form onSubmit={this.handleSubmit}>
+          <form id="formtochange" onSubmit={this.handleSubmit}>
             <input
               type="text"
               value={this.state.taskdescription}
               onChange={this.handleChange}
             />
-            <button type="submit">Absenden</button>
+            <button className="Submission" type="submit">Absenden</button>
           </form>
           <div>
             {this.renderTasks(this.state.todos)}

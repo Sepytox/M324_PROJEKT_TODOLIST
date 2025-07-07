@@ -51,8 +51,20 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
 			<version>5.9.2</version>
-		<scope>test</scope>
-</dependency>
+			<scope>test</scope>
+		</dependency>
+		<!-- Selenium -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>4.34.0</version>
+		</dependency>
+		<!-- WebDriverManager by Boni Garcia-->
+		<dependency>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>webdrivermanager</artifactId>
+			<version>5.7.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
