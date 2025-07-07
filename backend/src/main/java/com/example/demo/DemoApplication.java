@@ -39,11 +39,12 @@ public class DemoApplication {
 	@GetMapping("/")
 	public List<Task> getTasksEndpoint() {
 
-		System.out.println("API EP '/' returns task-list of size " + tasks.size() + ".");
+		logger.info(() -> "API EP '/' returns task-list of size " + tasks.size() + ".");
 		if (tasks.size() > 0) {
 			int i = 1;
 			for (Task task : tasks) {
-				System.out.println("-task " + (i++) + ":" + task.getTaskdescription());
+				final int taskNum = i++;
+				logger.info(() -> "-task " + taskNum + ":" + task.getTaskdescription());
 			}
 		}
 		return tasks;
@@ -52,7 +53,7 @@ public class DemoApplication {
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("/tasks")
 	public String addTask(@RequestBody String taskdescription) {
-		System.out.println("API EP '/tasks': '" + taskdescription + "'");
+		logger.info(() -> "API EP '/tasks': '" + taskdescription + "'");
 		
 		if (taskdescription == null || taskdescription.trim().isEmpty()) {
 			logger.warning("Empty task description received");
@@ -69,11 +70,11 @@ public class DemoApplication {
 			
 			for (Task t : tasks) {
 				if (t.getTaskdescription().equals(task.getTaskdescription())) {
-					System.out.println(">>>task: '" + task.getTaskdescription() + "' already exists!");
+					logger.info(() -> ">>>task: '" + task.getTaskdescription() + "' already exists!");
 					return "duplicate";
 				}
 			}
-			System.out.println("...adding task: '" + task.getTaskdescription() + "'");
+			logger.info(() -> "...adding task: '" + task.getTaskdescription() + "'");
 			tasks.add(task);
 		} catch (JsonProcessingException e) {
 			logger.warning("Failed to parse JSON: " + e.getMessage());
@@ -85,7 +86,7 @@ public class DemoApplication {
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("/delete")
 	public String delTask(@RequestBody String taskdescription) {
-		System.out.println("API EP '/delete': '" + taskdescription + "'");
+		logger.info(() -> "API EP '/delete': '" + taskdescription + "'");
 		
 		if (taskdescription == null || taskdescription.trim().isEmpty()) {
 			logger.warning("Empty task description for delete");
@@ -104,12 +105,12 @@ public class DemoApplication {
 			while (it.hasNext()) {
 				Task t = it.next();
 				if (t.getTaskdescription().equals(task.getTaskdescription())) {
-					System.out.println("...deleting task: '" + task.getTaskdescription() + "'");
+					logger.info(() -> "...deleting task: '" + task.getTaskdescription() + "'");
 					it.remove();
 					return SUCCESS_RESPONSE;
 				}
 			}
-			System.out.println(">>>task: '" + task.getTaskdescription() + "' not found!");
+			logger.info(() -> ">>>task: '" + task.getTaskdescription() + "' not found!");
 		} catch (JsonProcessingException e) {
 			logger.warning("Failed to parse JSON for delete: " + e.getMessage());
 			return ERROR_RESPONSE;
@@ -120,7 +121,7 @@ public class DemoApplication {
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("/edit")
 	public String editTask(@RequestBody String requestBody) {
-		System.out.println("API EP '/edit': '" + requestBody + "'");
+		logger.info(() -> "API EP '/edit': '" + requestBody + "'");
 		
 		if (requestBody == null || requestBody.trim().isEmpty()) {
 			logger.warning("Empty request body for edit");
@@ -140,11 +141,11 @@ public class DemoApplication {
 				if (task.getId() == editRequest.getId()) {
 					String oldDesc = task.getTaskdescription();
 					task.setTaskdescription(editRequest.getNewDescription());
-					System.out.println("...editing task " + editRequest.getId() + ": '" + oldDesc + "' -> '" + editRequest.getNewDescription() + "'");
-					return "success";
+					logger.info(() -> "...editing task " + editRequest.getId() + ": '" + oldDesc + "' -> '" + editRequest.getNewDescription() + "'");
+					return SUCCESS_RESPONSE;
 				}
 			}
-			System.out.println(">>>task with id " + editRequest.getId() + " not found!");
+			logger.info(() -> ">>>task with id " + editRequest.getId() + " not found!");
 		} catch (JsonProcessingException e) {
 			logger.warning("Failed to parse JSON for edit: " + e.getMessage());
 			return ERROR_RESPONSE;
