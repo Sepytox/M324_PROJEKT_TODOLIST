@@ -25,6 +25,14 @@ public class SeleniumTest {
         driver = new ChromeDriver();
         driver.get("http://localhost:3000");
         driver.manage().window().maximize();
+
+        /*
+         * For automated testing while pushing, GUI is not enabled thus:
+         * 
+         *      ChromeOptions options = new ChromeOptions();
+         *      options.addArguments("--headless=new");
+         *
+         */
     }
 
 
@@ -58,6 +66,12 @@ public class SeleniumTest {
 
         boolean editWorks = ul.findElements(By.tagName("li")).stream()
         .anyMatch(li -> li.getText().contains("Edit works fine"));
+        //Proof that it works
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         assertTrue(editWorks, "Edit Button Failed");
     }

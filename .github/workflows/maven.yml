@@ -10,9 +10,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "Selenium" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "Selenium" ]
 
 jobs:
   build:
@@ -28,7 +28,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Test
+    - name: Run Tests
       run: mvn -f backend/ --batch-mode -Dmaven.test.failure.ignore=true test
 
     - name: Build with Maven
