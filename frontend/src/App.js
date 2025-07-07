@@ -145,8 +145,8 @@ class App extends React.Component {
           <h1>
             ToDo Liste
           </h1>
-          <form id="formtochange" onSubmit={this.handleSubmit}>
-            <input
+          <form onSubmit={this.handleSubmit}>
+            <input id="formtochange"
               type="text"
               value={this.state.taskdescription}
               onChange={this.handleChange}
