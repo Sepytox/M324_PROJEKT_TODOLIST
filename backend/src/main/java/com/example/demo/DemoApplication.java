@@ -23,6 +23,7 @@ public class DemoApplication {
 	private static final Logger logger = Logger.getLogger(DemoApplication.class.getName());
 	private final ObjectMapper mapper = new ObjectMapper();
 	private static final String ERROR_RESPONSE = "error";
+	private static final String SUCCESS_RESPONSE = "success";
 	
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
@@ -78,7 +79,7 @@ public class DemoApplication {
 			logger.warning("Failed to parse JSON: " + e.getMessage());
 			return ERROR_RESPONSE;
 		}
-		return "success";
+		return SUCCESS_RESPONSE;
 	}
 
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -105,7 +106,7 @@ public class DemoApplication {
 				if (t.getTaskdescription().equals(task.getTaskdescription())) {
 					System.out.println("...deleting task: '" + task.getTaskdescription() + "'");
 					it.remove();
-					return "success";
+					return SUCCESS_RESPONSE;
 				}
 			}
 			System.out.println(">>>task: '" + task.getTaskdescription() + "' not found!");
